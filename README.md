@@ -13,8 +13,8 @@ Es un blog con caracteristicas básicas.
 Instrucciones paso a paso sobre cómo instalar y configurar el proyecto localmente. Ejemplo:
 
 ```bash
-git clone https://github.com/tu-usuario/tu-repositorio.git
-cd tu-repositorio
+git clone https://github.com/carlosbermudezg/blog_backend.git
+cd blog_backend
 npm install
 
 npm start

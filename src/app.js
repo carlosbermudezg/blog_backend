@@ -3,18 +3,20 @@ const router = require('./routes')
 const helmet = require('helmet')
 const cors = require('cors')
 const path = require('path')
+const cookieParser = require('cookie-parser')
 
 const app = express()
 
-app.use(express.json());
+app.use(express.json())
+app.use(cookieParser())
 app.use(helmet({
     crossOriginResourcePolicy: false,
 }));
-app.use(cors());
-app.use(express.static(path.join(__dirname, 'public'))); 
+app.use(cors())
+app.use(express.static(path.join(__dirname, 'public')))
 app.use('/api/v1', router)
 app.get('/', (req, res) => {
-    return res.send("blog api v1");
+    return res.send("blog api v1")
 })
 
 

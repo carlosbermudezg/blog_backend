@@ -1,5 +1,6 @@
 const catchError = require('../utils/catchError')
-const Posts = require('../models/Posts');
+const Posts = require('../models/Posts')
+const { v4: uuidv4 } = require('uuid')
 
 const getAll = catchError(async(req, res) => {
     const { page, limit, category } = req.query
@@ -32,7 +33,8 @@ const create = catchError(async(req, res) => {
         "created_at": req.body.created_at,
         "published_at": req.body.published_at,
         "created_by": req.body.created_by,
-        "status": req.body.status
+        "status": req.body.status,
+        "viewedBy": "[]"
     }
     const result = await Posts.create(post)
     return res.status(201).json(result);
@@ -40,7 +42,24 @@ const create = catchError(async(req, res) => {
 
 const getOne = catchError(async(req, res)=>{
     const { id } = req.params
+    let visitorId = req.cookies['visitor_id']
+    if (!visitorId) {
+        visitorId = uuidv4();
+        res.cookie('visitor_id', visitorId, { maxAge: 900000, httpOnly: true });
+    }
     const result = await Posts.findById(id)
+    const cookies = JSON.parse(result[0][0].viewedBy)
+    if(!cookies.includes(visitorId)){
+        cookies.push(visitorId)
+        const views = result[0][0].views + 1
+        const post = {
+            "id_post": id,
+            "cookies": JSON.stringify(cookies),
+            "views": views
+        }
+        await Posts.updateViews(post)
+    }
+
     return res.status(200).json(result[0])
 })
 

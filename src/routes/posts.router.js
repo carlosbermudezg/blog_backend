@@ -9,7 +9,7 @@ routerPosts.route('/')
     .post(verifyJWT, create)
 
 routerPosts.route('/:id')
-    .get(verifyJWT, getOne)
+    .get(getOne)
     .put(verifyJWT, update)
 
 module.exports = routerPosts;

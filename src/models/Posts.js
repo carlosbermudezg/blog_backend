@@ -35,9 +35,9 @@ const findById = async(id)=>{
     return result
 }
 
-const create = async({title, content, category, created_at, published_at, created_by, status})=>{
+const create = async({title, content, category, created_at, published_at, created_by, status, viewedBy})=>{
     const result = await pool.query(
-        `INSERT INTO posts(title, content, category_id, created_at, published_at, created_by, status) VALUES('${title}','${content}','${category}','${created_at}','${published_at}','${created_by}','${status}')`
+        `INSERT INTO posts(title, content, category_id, created_at, published_at, created_by, status, viewedBy) VALUES('${title}','${content}','${category}','${created_at}','${published_at}','${created_by}','${status}','${viewedBy}')`
     );
     return result
 }
@@ -47,11 +47,18 @@ const update = async(post)=>{
     )
     return result
 }
+const updateViews = async(post)=>{
+    const result = await pool.query(
+        `UPDATE posts SET views='${post.views}', viewedBy='${post.cookies}' WHERE id_blog=${post.id_post}`
+    )
+    return result
+}
 
 module.exports = {
     allPosts,
     countPosts,
     findById,
     create,
-    update
+    update,
+    updateViews
 }
